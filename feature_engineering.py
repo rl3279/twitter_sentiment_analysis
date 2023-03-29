@@ -4,7 +4,7 @@ from preprocessing import preprocess_pipeline
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 
 
-def exlaim_freq(s: str) -> float:
+def exclaim_freq(s: str) -> float:
     """Frequency of excalamtion points in a tweet.
 
     :param s: input str
@@ -13,7 +13,7 @@ def exlaim_freq(s: str) -> float:
     """
     s = "".join(s.split())
     count = sum([1 if t == "!" else 0 for t in s])
-    return count / len(s)
+    return 0 if len(s) == 0 else count / len(s) 
 
 
 def mention_count(s: str) -> int:
@@ -34,12 +34,12 @@ def cap_freq(s: str) -> float:
     :type s: str
     :rtype: float
     """
-    s = preprocess_pipeline(s)
+    s = preprocess_pipeline(s, return_lower=False)
     count = sum([1 if t.isupper() else 0 for t in s])
-    return count / len(s)
+    return 0 if len(s) == 0 else count / len(s) 
 
 
-def get_tfidf(data: pd.Series) -> np.ndarray:
+def get_tfidf(data: pd.Series) -> pd.DataFrame:
     """Encode a Series of text string to TF-IDF.
 
     :param data: input data
@@ -50,4 +50,8 @@ def get_tfidf(data: pd.Series) -> np.ndarray:
     tfidf = TfidfTransformer()
     X = vectorizer.fit_transform(data)
     X = tfidf.fit_transform(X)
-    return X.toarray()
+    df = pd.DataFrame(
+        X.toarray(), 
+        columns = [f"tok_{s}" for s in vectorizer.get_feature_names_out()]
+    )
+    return df

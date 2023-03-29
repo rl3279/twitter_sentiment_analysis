@@ -24,5 +24,9 @@ def get_sub_dataset(size:int=5000, random_seed:int = 0):
         names = my_globals.HEADER
     )
     idx = np.random.choice(data.index, size)
-    data.loc[idx].to_csv("/".join([my_globals.DATA_DIR, f"twitter_seed{random_seed}.csv"]), index = False)
+    data.loc[idx].to_csv(
+        "/".join([my_globals.DATA_DIR, f"twitter_seed{random_seed}.csv"]), 
+        index = False,
+        encoding = "latin1"
+    )
     
