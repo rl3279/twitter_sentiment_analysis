@@ -75,6 +75,16 @@ def decontract(s: str) -> str:
         tokens.append(contractions.fix(t))
     return " ".join(tokens)
 
+def del_strange_characters(s: str) -> str:
+    """Delete strange characters in text.
+    e.g. got this from marjÔøΩs multiply. -> got this from marjs multiply.
+    
+    :param s: input string
+    :type s: str
+    :rtype: str
+    """
+    chars = re.findall(r'[a-zA-Z\s]', s)
+    return " ".join(tokenize("".join(chars)))
 
 def del_stopwords(s: str) -> str:
     """Delete stopwords and punctuation from a string.
@@ -135,6 +145,7 @@ def preprocess_pipeline(s: str, return_lower = True) -> str:
             del_username,
             decontract,
             lemmatize,
+            del_strange_characters, 
             del_stopwords,
             del_punc,
             del_digits
