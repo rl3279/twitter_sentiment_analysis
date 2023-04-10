@@ -88,6 +88,18 @@ def del_stopwords(s: str) -> str:
 
     return " ".join([t for t in tokenize(s) if t not in stop_words])
 
+def remove_digits(string):
+    """Detect digits from str.
+
+    :param s: input string
+    :type s: str
+    :rtype: bool
+    """
+    cleaned_string = re.sub(r'\w*\d\w*|[^\w\s]', '', string)
+    cleaned_string = re.sub(r'\s+', ' ', cleaned_string)
+    cleaned_string = cleaned_string.strip()
+
+    return bool(cleaned_string)
 
 def del_digits(s: str) -> str:
     """Delete digits from str.
@@ -96,8 +108,7 @@ def del_digits(s: str) -> str:
     :type s: str
     :rtype: str
     """
-    return " ".join([w for w in tokenize(s) if not w.isdigit()])
-
+    return " ".join([w for w in tokenize(s) if remove_digits(w)])
 
 def lemmatize(s: str) -> str:
     """Lemmatize str.
