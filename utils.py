@@ -20,7 +20,6 @@ def get_sub_dataset(size: int = 5000, random_seed: int = 0) -> pd.DataFrame:
     :rtype: pd.DataFrame
     """
     DATA_PATH = "/".join([my_globals.DATA_DIR, my_globals.MAIN_DATA_NAME])
-    DATA_PATH = "../project_data/training.1600000.processed.noemoticon.csv"
     data = pd.read_csv(
         DATA_PATH,
         # encoding = 'ISO-8859-1',
@@ -35,7 +34,7 @@ def get_sub_dataset(size: int = 5000, random_seed: int = 0) -> pd.DataFrame:
         index=False,
         encoding="latin1"
     )
-    return data
+    return data.reset_index()
 
 
 def get_sub_featured_datasets(size: int = 5000, random_seed: int = 0) -> pd.DataFrame:

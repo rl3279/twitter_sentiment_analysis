@@ -47,7 +47,7 @@ def get_token_features(data: pd.Series, features = "tfidf") -> pd.DataFrame:
     """
     vectorizer = CountVectorizer()
     tfidf = TfidfTransformer()
-    X = vectorizer.fit_transform(data)
+    X = vectorizer.fit_transform(data["processed_text"])
     df_count= pd.DataFrame(
         X.toarray(),
         columns = [f"count_{s}" for s in vectorizer.get_feature_names_out()]
