@@ -88,14 +88,14 @@ def del_stopwords(s: str) -> str:
 
     return " ".join([t for t in tokenize(s) if t not in stop_words])
 
-def remove_digits(string):
+def remove_digits(s: str) -> bool:
     """Detect digits from str.
 
     :param s: input string
     :type s: str
     :rtype: bool
     """
-    cleaned_string = re.sub(r'\w*\d\w*|[^\w\s]', '', string)
+    cleaned_string = re.sub(r'\w*\d\w*|[^\w\s]', '', s)
     cleaned_string = re.sub(r'\s+', ' ', cleaned_string)
     cleaned_string = cleaned_string.strip()
 
