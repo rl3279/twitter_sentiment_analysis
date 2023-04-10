@@ -48,17 +48,20 @@ def get_token_features(data: pd.Series, features = "tfidf") -> pd.DataFrame:
     vectorizer = CountVectorizer()
     tfidf = TfidfTransformer()
     X = vectorizer.fit_transform(data)
+    df_count= pd.DataFrame(
+        X.toarray(),
+        columns = [f"count_{s}" for s in vectorizer.get_feature_names_out()]
+    )
     if features.lower() == "count":
-        df = pd.DataFrame(
-            X.toarray(),
-            columns = [f"count_{s}" for s in vectorizer.get_feature_names_out()]
-        )
-    elif features.lower() == "tfidf":
-        X = tfidf.fit_transform(X)
-        df = pd.DataFrame(
-            X.toarray(),
-            columns = [f"tfidf_{s}" for s in vectorizer.get_feature_names_out()]
-        )
+        return df_count
+    XX = tfidf.fit_transform(X)
+    df_tfidf = pd.DataFrame(
+        XX.toarray(),
+        columns = [f"tfidf_{s}" for s in vectorizer.get_feature_names_out()]
+    )
+    if features.lower() == "tfidf":
+        return df_tfidf
+    elif features.lower() == "both":
+        return pd.concat([df_count, df_tfidf], axis = 1)
     else:
         raise RuntimeError("Invalid features. features can only take values 'tfidf' or 'count'.")
-    return df
