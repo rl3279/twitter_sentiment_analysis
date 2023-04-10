@@ -38,8 +38,7 @@ def cap_freq(s: str) -> float:
     count = sum([1 if t.isupper() else 0 for t in s])
     return 0 if len(s) == 0 else count / len(s) 
 
-
-def get_tfidf(data: pd.Series) -> pd.DataFrame:
+def get_token_features(data: pd.Series, features = "tfidf") -> pd.DataFrame:
     """Encode a Series of text string to TF-IDF.
 
     :param data: input data
@@ -49,9 +48,17 @@ def get_tfidf(data: pd.Series) -> pd.DataFrame:
     vectorizer = CountVectorizer()
     tfidf = TfidfTransformer()
     X = vectorizer.fit_transform(data)
-    X = tfidf.fit_transform(X)
-    df = pd.DataFrame(
-        X.toarray(), 
-        columns = [f"tok_{s}" for s in vectorizer.get_feature_names_out()]
-    )
+    if features.lower() == "count":
+        df = pd.DataFrame(
+            X.toarray(),
+            columns = [f"count_{s}" for s in vectorizer.get_feature_names_out()]
+        )
+    elif features.lower() == "tfidf":
+        X = tfidf.fit_transform(X)
+        df = pd.DataFrame(
+            X.toarray(),
+            columns = [f"tfidf_{s}" for s in vectorizer.get_feature_names_out()]
+        )
+    else:
+        raise RuntimeError("Invalid features. features can only take values 'tfidf' or 'count'.")
     return df
