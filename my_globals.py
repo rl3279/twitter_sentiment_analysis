@@ -13,3 +13,4 @@ PIPELINE = {
         "lemmatize", "del_stopwords", "del_punc",
         "del_digits"
     ]
+}
