@@ -27,6 +27,7 @@ def get_sub_dataset(size: int = 5000, random_seed: int = 0) -> pd.DataFrame:
         header=None,
         names=my_globals.HEADER
     )
+    np.random.seed(random_seed)
     idx = np.random.choice(data.index, size)
     data = data.loc[idx]
     data.to_csv(
