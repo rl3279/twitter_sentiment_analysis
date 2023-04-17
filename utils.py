@@ -37,10 +37,32 @@ def get_sub_dataset(size: int = 5000, random_seed: int = 0) -> pd.DataFrame:
     return data.reset_index()
 
 
-def get_sub_featured_datasets(size: int = 5000, random_seed: int = 0) -> pd.DataFrame:
+def get_sub_featured_datasets(
+    size: int = 5000,
+    random_seed: int = 0,
+    pipeline: str = "conservative"
+) -> pd.DataFrame:
+    """Generate a subset of the main dataset and conduct feature engineering.
+
+    :param size: size of subset
+    :type size: int, optional. Default to be 5000.
+    :param random_seed: random seed
+    :type random_seed: int, optional. Default to be 0.
+    :param pipeline: the pipelining style applied in text processing.
+        Either "concervative" or "aggresive".
+    :type pipeline: str
+    :rtype: pd.DataFrame
+    """
+
     data = get_sub_dataset(size, random_seed)
     data = cleaning(data)
-    data["processed_text"] = data["text"].apply(preprocess_pipeline)
+    data["processed_text"] = data["text"].apply(
+        lambda s:
+        preprocess_pipeline(
+            s,
+            pipeline = pipeline
+        )
+    )
     data["exclaim_freq"] = data["text"].apply(fe.exclaim_freq)
     data["mention_count"] = data["text"].apply(fe.mention_count)
     data["cap_freq"] = data["text"].apply(fe.cap_freq)
