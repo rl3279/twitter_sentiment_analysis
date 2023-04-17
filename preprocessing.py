@@ -8,6 +8,7 @@ from nltk.corpus import stopwords
 import nltk
 import re
 import contractions
+import warnings
 from functools import reduce
 from dateutil.parser import parse
 
@@ -130,24 +131,44 @@ def lemmatize(s: str) -> str:
     lemmatizer = WordNetLemmatizer()
     return " ".join([lemmatizer.lemmatize(t) for t in tokenize(s)])
 
+pipeline_dict = {
+    "del_link": del_link,
+    "del_username": del_username,
+    "decontract": decontract,
+    "lemmatize": lemmatize,
+    "del_stopwords": del_stopwords,
+    "del_punc": del_punc,
+    "del_digits": del_digits,
+    "del_strange_characters": del_strange_characters
+}
 
-def preprocess_pipeline(s: str, return_lower = True) -> str:
+def preprocess_pipeline(
+        s: str, 
+        return_lower: bool = True,
+        pipeline: str = "conservative"
+    ) -> str:
     """Run string through all pre-processing functions.
 
     :param s: input string
     :type s: str
+    :param return_lower: whether to return lower case str or not
+    :type return_lower: bool
+    :param pipeline: style of pipelining. Either "conservative" or "aggresive".
+    :type pipeline: str
     :rtype: str
     """
+    if pipeline not in ["conservative", "aggresive"]:
+        warnings.warn(
+            "Invalid pipeline. Default to 'conservative'."
+        )
+        pipeline = "conservative"
+
+    # pipeline designs stored in my_globals
     s = reduce(
         lambda value, function: function(value),
         (
-            del_link,
-            del_username,
-            decontract,
-            lemmatize,
-            del_stopwords,
-            del_punc,
-            del_digits
+            pipeline_dict[key]
+            for key in my_globals.PIPELINE[pipeline]
         ),
         s,
     )
