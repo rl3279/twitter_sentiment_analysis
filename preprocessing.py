@@ -131,6 +131,18 @@ def lemmatize(s: str) -> str:
     lemmatizer = WordNetLemmatizer()
     return " ".join([lemmatizer.lemmatize(t) for t in tokenize(s)])
 
+def del_awww(s: str) -> str:
+    """Delete repeated letters in a str.
+    e.g. haaahaahaaaa -> haahaahaa
+
+    :param s: input string
+    :type s: str
+    :rtype: str
+    """
+    pattern = r'(\w)\1{2,}'
+    reduced_s = re.sub(pattern, r'\1\1', s)
+    return reduced_s
+
 pipeline_dict = {
     "del_link": del_link,
     "del_username": del_username,
@@ -139,7 +151,8 @@ pipeline_dict = {
     "del_stopwords": del_stopwords,
     "del_punc": del_punc,
     "del_digits": del_digits,
-    "del_strange_characters": del_strange_characters
+    "del_strange_characters": del_strange_characters,
+    "del_awww": del_awww
 }
 
 def preprocess_pipeline(
