@@ -170,7 +170,7 @@ def preprocess_pipeline(
     :type pipeline: str
     :rtype: str
     """
-    if pipeline not in ["conservative", "aggresive"]:
+    if pipeline not in my_globals.PIPELINE.keys():
         warnings.warn(
             "Invalid pipeline. Default to 'conservative'."
         )
