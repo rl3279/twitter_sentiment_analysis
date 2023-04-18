@@ -19,14 +19,7 @@ def get_sub_dataset(size: int = 5000, random_seed: int = 0) -> pd.DataFrame:
     :type random_seed: int, optional. Default to be 0.
     :rtype: pd.DataFrame
     """
-    DATA_PATH = "/".join([my_globals.DATA_DIR, my_globals.MAIN_DATA_NAME])
-    data = pd.read_csv(
-        DATA_PATH,
-        # encoding = 'ISO-8859-1',
-        encoding="latin1",
-        header=None,
-        names=my_globals.HEADER
-    )
+    data = get_entire_dataset()
     np.random.seed(random_seed)
     idx = np.random.choice(data.index, size)
     data = data.loc[idx]
@@ -71,14 +64,9 @@ def get_sub_featured_datasets(
     data = pd.concat([data, count_tfidf], axis=1)
     return data
 
-def get_entire_dataset():
-    """Generate a subset of the main dataset usinga random seed.
-    Saves sub-dataset to a diectory outside of and parallel to main directory. 
-
-    :param size: size of subset
-    :type size: int, optional. Default to be 5000.
-    :param random_seed: random seed
-    :type random_seed: int, optional. Default to be 0.
+def get_entire_dataset() -> pd.DataFrame:
+    """Fetch the entire dataset as a dataframe.
+    
     :rtype: pd.DataFrame
     """
     DATA_PATH = "/".join([my_globals.DATA_DIR, my_globals.MAIN_DATA_NAME])
