@@ -34,7 +34,8 @@ def get_sub_dataset(size: int = 5000, random_seed: int = 0) -> pd.DataFrame:
 def get_sub_featured_datasets(
     size: int = 5000,
     random_seed: int = 0,
-    pipeline: str = "conservative"
+    pipeline: str = "conservative",
+    max_features: int = None
 ) -> pd.DataFrame:
     """Generate a subset of the main dataset and conduct feature engineering.
 
@@ -54,19 +55,26 @@ def get_sub_featured_datasets(
         lambda s:
         preprocess_pipeline(
             s,
-            pipeline = pipeline
+            pipeline=pipeline
         )
     )
     data["exclaim_freq"] = data["text"].apply(fe.exclaim_freq)
     data["mention_count"] = data["text"].apply(fe.mention_count)
     data["cap_freq"] = data["text"].apply(fe.cap_freq)
-    count_tfidf = fe.get_token_features(data)
-    data = pd.concat([data, count_tfidf], axis=1)
+    count_tfidf = fe.get_token_features(
+        data,
+        features="tfidf",
+        max_features=max_features
+    )
+    feature_columns = ["exclaim_freq", "mention_count", "cap_freq"]
+    feature_columns += [col for col in data.columns if "weekday" in col]
+    data = pd.concat([data[feature_columns], count_tfidf], axis=1)
     return data
+
 
 def get_entire_dataset() -> pd.DataFrame:
     """Fetch the entire dataset as a dataframe.
-    
+
     :rtype: pd.DataFrame
     """
     DATA_PATH = "/".join([my_globals.DATA_DIR, my_globals.MAIN_DATA_NAME])
