@@ -60,7 +60,7 @@ def get_sub_featured_datasets(
     data["exclaim_freq"] = data["text"].apply(fe.exclaim_freq)
     data["mention_count"] = data["text"].apply(fe.mention_count)
     data["cap_freq"] = data["text"].apply(fe.cap_freq)
-    count_tfidf = fe.get_token_features(data, "both")
+    count_tfidf = fe.get_token_features(data)
     data = pd.concat([data, count_tfidf], axis=1)
     return data
 

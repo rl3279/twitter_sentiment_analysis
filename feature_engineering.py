@@ -38,14 +38,18 @@ def cap_freq(s: str) -> float:
     count = sum([1 if t.isupper() else 0 for t in s])
     return 0 if len(s) == 0 else count / len(s) 
 
-def get_token_features(data: pd.Series, features = "tfidf") -> pd.DataFrame:
+def get_token_features(data: pd.Series, features = "tfidf", max_features: int = None) -> pd.DataFrame:
     """Encode a Series of text string to TF-IDF.
 
     :param data: input data
     :type data: pd.Series
+    :param features: the features to be outputed. Can take values "tfidf", "count", "both".
+    :type features: str
+    :param max_features: maximum features limit for CountVectorizer
+    :type max_features: int
     :rtype: np.ndarray
     """
-    vectorizer = CountVectorizer()
+    vectorizer = CountVectorizer(max_features=max_features)
     tfidf = TfidfTransformer()
     X = vectorizer.fit_transform(data["processed_text"])
     df_count= pd.DataFrame(
