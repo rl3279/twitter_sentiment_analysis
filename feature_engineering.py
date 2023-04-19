@@ -6,6 +6,7 @@ from gensim.parsing.porter import PorterStemmer
 from gensim.models import Word2Vec
 from preprocessing import preprocess_pipeline
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
+from sklearn.preprocessing import MinMaxScaler
 
 
 def exclaim_freq(s: str) -> float:
@@ -138,4 +139,14 @@ def word_embedding(
             elif aggregate == "l3":
                 word_vector.append(m3)
 
-    return pd.DataFrame(word_vector, index=None)
+    # for memory conservation
+    minmax = MinMaxScaler()
+    df = pd.DataFrame(
+        minmax.fit_transform(word_vector), 
+        index=None
+    )
+
+    df = df.apply(
+        pd.to_numeric, downcast="float"
+    )
+    return df

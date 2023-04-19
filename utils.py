@@ -88,10 +88,17 @@ def get_entire_dataset() -> pd.DataFrame:
     return data
 
 
-def get_feature_space(feature_space: int, max_features: int, w2v_aggregate: str = "l3"):
+def get_feature_space(
+        N: int,
+        feature_space: int, 
+        max_features: int, 
+        w2v_aggregate: str = "l3",
+        random_seed:int = 0
+    ):
+
     if feature_space not in [1, 2]:
         raise RuntimeError("feature_space = 1 or 2.")
-    data = get_entire_dataset()
+    data = get_sub_dataset(size = N, random_seed=random_seed)
     data = cleaning(data)
 
     if feature_space == 1:
@@ -102,18 +109,13 @@ def get_feature_space(feature_space: int, max_features: int, w2v_aggregate: str 
                 pipeline="conservative"
             )
         )
-        data["exclaim_freq"] = data["text"].apply(fe.exclaim_freq)
-        data["mention_count"] = data["text"].apply(fe.mention_count)
-        data["cap_freq"] = data["text"].apply(fe.cap_freq)
-        count_tfidf = fe.get_token_features(
+
+        feature_df = fe.get_token_features(
             data,
             features="tfidf",
             max_features=max_features
         )
-        feature_columns = ["exclaim_freq", "mention_count", "cap_freq"]
-        feature_columns += [col for col in data.columns if "weekday" in col]
-        data = pd.concat([data[feature_columns], count_tfidf], axis=1)
-        return data
+
     elif feature_space == 2:
         data["processed_text"] = data["text"].apply(
             lambda s:
@@ -122,10 +124,19 @@ def get_feature_space(feature_space: int, max_features: int, w2v_aggregate: str 
                 pipeline="w2v"
             )
         )
-        w2v_df = fe.word_embedding(
+        feature_df = fe.word_embedding(
             data,
             vector_size=max_features,
             w2v_epochs=30,
             aggregate=w2v_aggregate,
             colname="processed_text"
         )
+
+    data["exclaim_freq"] = data["text"].apply(fe.exclaim_freq)
+    data["mention_count"] = data["text"].apply(fe.mention_count)
+    data["cap_freq"] = data["text"].apply(fe.cap_freq)
+    feature_columns = ["exclaim_freq", "mention_count", "cap_freq", "target"]
+    feature_columns += [col for col in data.columns if "weekday" in col]
+    data = pd.concat([data[feature_columns], feature_df], axis=1)
+    return data
+
