@@ -1,3 +1,5 @@
 nltk
 contractions
 sklearn
+gensim
+tensorflow
