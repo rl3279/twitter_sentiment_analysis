@@ -124,7 +124,7 @@ def get_feature_space(
                 pipeline="w2v"
             )
         )
-        feature_df = fe.word_embedding(
+        feature_df, _ = fe.word_embedding(
             data,
             vector_size=max_features,
             w2v_epochs=30,

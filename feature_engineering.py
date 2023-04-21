@@ -84,7 +84,7 @@ def word_embedding(
     w2v_epochs:int=30,
     aggregate:str="mean",
     colname:str="text"
-) -> pd.DataFrame:
+):
     """creates word embedding feature space for dataset.
     
     :param df: input dataframe
@@ -149,4 +149,4 @@ def word_embedding(
     df = df.apply(
         pd.to_numeric, downcast="float"
     )
-    return df
+    return df, w2v_model
