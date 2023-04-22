@@ -3,3 +3,4 @@ contractions
 sklearn
 gensim
 tensorflow
+keras
