@@ -1,3 +1,4 @@
+import gensim
 import numpy as np
 import pandas as pd
 
@@ -7,6 +8,7 @@ from gensim.models import Word2Vec
 from preprocessing import preprocess_pipeline
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.preprocessing import MinMaxScaler
+from typing import Tuple
 
 
 def exclaim_freq(s: str) -> float:
@@ -84,7 +86,7 @@ def word_embedding(
     w2v_epochs:int=30,
     aggregate:str="mean",
     colname:str="text"
-):
+) -> Tuple[pd.DataFrame, gensim.models.Word2Vec]:
     """creates word embedding feature space for dataset.
     
     :param df: input dataframe
@@ -101,6 +103,7 @@ def word_embedding(
     :type aggregate: str
     :param colname: name of text column in df
     :type colname: str
+    :rtype: Tuple[pd.DataFrame, gensim.models.Word2Vec]
     """
     word_vector = []
     text_col = df[colname]
@@ -109,10 +112,11 @@ def word_embedding(
     stemmed_tokens = [[porter_stemmer.stem(
         word) for word in tokens] for tokens in tokenized_text]
 
+    # initialize gensim Word2Vec 
     w2v_model = Word2Vec(sentences=stemmed_tokens,
                          vector_size=vector_size, window=5, min_count=1, workers=4, sg=1)
 
-    # below is added to Mike's version
+    # build vocabulary and train on document
 
     w2v_model.build_vocab(stemmed_tokens)
     w2v_model.train(
@@ -121,8 +125,7 @@ def word_embedding(
         epochs=w2v_epochs
     )
 
-    # above is added to Mike's version
-
+    # create model vector for each word in document.
     for index, row in enumerate(stemmed_tokens):
         model_vector = np.zeros((vector_size, len(row)))
         for tok_id, token in enumerate(row):
@@ -132,6 +135,8 @@ def word_embedding(
         if len(stemmed_tokens[index]) == 0:
             word_vector.append([0]*vector_size)
         else:
+            # since output is a 3-d tensor, use aggregate function
+            # to map back to a matrix for ML models
             mu = np.mean(model_vector, axis=1)
             m3 = np.mean(model_vector**3, axis=1)
             if aggregate == "mean":
