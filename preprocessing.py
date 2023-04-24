@@ -1,16 +1,23 @@
+"""
+IEOR4525 Machine Learning For FE and OR - Twitter Sentiment Analysis, Spring 2023
+
+Functional module. Containing all functions used in preprocessing.
+"""
+
+import contractions
 import my_globals
-import pandas as pd
 import numpy as np
-from typing import List
+import nltk
+import pandas as pd
+import re
+import warnings
+
+from dateutil.parser import parse
+from functools import reduce
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import stopwords
-import nltk
-import re
-import contractions
-import warnings
-from functools import reduce
-from dateutil.parser import parse
+from typing import List, Tuple
 
 
 def setup_nltk():
@@ -23,7 +30,15 @@ def setup_nltk():
             nltk.download(p)
 
 
-def tokenize(s: str, how="word_tokenize") -> List[str]:
+def tokenize(s: str, how: str = "word_tokenize") -> List[str]:
+    """Helper function for development. Tokenizes a str.
+
+    :param s: input string
+    :type s: str
+    :param how: tokenize function. Either "word_tokenize" from nltk or "split".
+    :type how: str, optional
+    :rtype: List[str]
+    """
     if how == "word_tokenize":
         return word_tokenize(s)
     elif how == "split":
@@ -76,16 +91,18 @@ def decontract(s: str) -> str:
         tokens.append(contractions.fix(t))
     return " ".join(tokens)
 
+
 def del_strange_characters(s: str) -> str:
     """Delete strange characters in text.
     e.g. got this from marjÔøΩs multiply. -> got this from marjs multiply.
-    
+
     :param s: input string
     :type s: str
     :rtype: str
     """
     chars = re.findall(r'[a-zA-Z\s]', s)
     return " ".join(tokenize("".join(chars)))
+
 
 def del_stopwords(s: str) -> str:
     """Delete stopwords and punctuation from a string.
@@ -98,6 +115,7 @@ def del_stopwords(s: str) -> str:
     stop_words = set(stopwords.words('english'))
 
     return " ".join([t for t in tokenize(s) if t not in stop_words])
+
 
 def remove_digits(s: str) -> bool:
     """Detect digits from str.
@@ -112,6 +130,7 @@ def remove_digits(s: str) -> bool:
 
     return bool(cleaned_string)
 
+
 def del_digits(s: str) -> str:
     """Delete digits from str.
 
@@ -120,6 +139,7 @@ def del_digits(s: str) -> str:
     :rtype: str
     """
     return " ".join([w for w in tokenize(s) if remove_digits(w)])
+
 
 def lemmatize(s: str) -> str:
     """Lemmatize str.
@@ -130,6 +150,7 @@ def lemmatize(s: str) -> str:
     """
     lemmatizer = WordNetLemmatizer()
     return " ".join([lemmatizer.lemmatize(t) for t in tokenize(s)])
+
 
 def del_awww(s: str) -> str:
     """Delete repeated letters in a str.
@@ -143,6 +164,7 @@ def del_awww(s: str) -> str:
     reduced_s = re.sub(pattern, r'\1\1', s)
     return reduced_s
 
+# dictionary that maps function names to str processing functions.
 pipeline_dict = {
     "del_link": del_link,
     "del_username": del_username,
@@ -155,11 +177,12 @@ pipeline_dict = {
     "del_awww": del_awww
 }
 
+
 def preprocess_pipeline(
-        s: str, 
-        return_lower: bool = True,
-        pipeline: str = "conservative"
-    ) -> str:
+    s: str,
+    return_lower: bool = True,
+    pipeline: str = "conservative"
+) -> str:
     """Run string through all pre-processing functions.
 
     :param s: input string
@@ -188,9 +211,10 @@ def preprocess_pipeline(
 
     return s.lower() if return_lower else s
 
-def str_datetime(s: str):
+
+def str_datetime(s: str) -> Tuple[str, str]:
     """Parse and format a datetime str to weekday and datetime.MAXYEAR
-    
+
     :param s: input string containing datetime information
     :type s: str
     :rtype: tuple[str, str]
@@ -199,9 +223,9 @@ def str_datetime(s: str):
     return ss[:3], ss[4:]
 
 
-def cleaning(df: pd.DataFrame):
+def cleaning(df: pd.DataFrame) -> pd.DataFrame:
     """Cleaning script of the data (or subset).
-    
+
     :param df: input dataframe.
     :type df: pd.DataFrame
     :rtype: pd.DataFrame
@@ -213,22 +237,22 @@ def cleaning(df: pd.DataFrame):
     )
     # One-hot encode weekday
     weekdaydummies = pd.get_dummies(
-        weekday_datetime['weekday'], 
-        prefix='weekday', 
+        weekday_datetime['weekday'],
+        prefix='weekday',
         dtype=float
     )
     weekdaydummies = pd.DataFrame(
-        weekdaydummies, 
+        weekdaydummies,
         columns=['weekday_'+w for w in [
             "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"
         ]]
     )
     # Concatenate weekday dummies to other features
     weekdaydummies_datetime = pd.concat(
-        [weekdaydummies, weekday_datetime['datetime']], 
+        [weekdaydummies, weekday_datetime['datetime']],
         axis=1
     )
     df = pd.concat([df, weekdaydummies_datetime], axis=1)
     # Drop the column with single unique value.
-    df.drop("flag", axis = 1, inplace=True)
+    df.drop("flag", axis=1, inplace=True)
     return df
