@@ -1,3 +1,10 @@
+"""
+IEOR4525 Machine Learning For FE and OR - Twitter Sentiment Analysis, Spring 2023
+
+Functional module. Containing all functions used in feature engineering.
+"""
+
+
 import gensim
 import numpy as np
 import pandas as pd
@@ -82,13 +89,13 @@ def get_token_features(data: pd.Series, features="tfidf", max_features: int = No
 
 def word_embedding(
     df: pd.DataFrame,
-    vector_size:int=1000,
-    w2v_epochs:int=30,
-    aggregate:str="mean",
-    colname:str="text"
+    vector_size: int = 1000,
+    w2v_epochs: int = 30,
+    aggregate: str = "mean",
+    colname: str = "text"
 ) -> Tuple[pd.DataFrame, gensim.models.Word2Vec]:
     """creates word embedding feature space for dataset.
-    
+
     :param df: input dataframe
     :type df: pd.DataFrame
     :param vector_size: size of embedding vectors
@@ -112,7 +119,7 @@ def word_embedding(
     stemmed_tokens = [[porter_stemmer.stem(
         word) for word in tokens] for tokens in tokenized_text]
 
-    # initialize gensim Word2Vec 
+    # initialize gensim Word2Vec
     w2v_model = Word2Vec(sentences=stemmed_tokens,
                          vector_size=vector_size, window=5, min_count=1, workers=4, sg=1)
 
@@ -147,7 +154,7 @@ def word_embedding(
     # for memory conservation
     minmax = MinMaxScaler()
     df = pd.DataFrame(
-        minmax.fit_transform(word_vector), 
+        minmax.fit_transform(word_vector),
         index=None
     )
 
