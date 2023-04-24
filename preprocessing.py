@@ -164,6 +164,7 @@ def del_awww(s: str) -> str:
     reduced_s = re.sub(pattern, r'\1\1', s)
     return reduced_s
 
+
 # dictionary that maps function names to str processing functions.
 pipeline_dict = {
     "del_link": del_link,
