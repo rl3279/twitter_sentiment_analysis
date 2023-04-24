@@ -3,9 +3,14 @@
 ## Description
 \
   **Project**: Columbia IEOR4525 - Multimodel NLP Twitter Sentiment Analysis
-  **Contributors**: Ding, Xu (Mike); Lin, Ruoyu; Liu, Zhengyi; Yu, Kexuan (Skylar). \
+  **Contributors**: Ding, Xu (Mike); Lin, Ruoyu; Liu, Zhengyi; Yu, Kexuan (Skylar).
+
+  <p align="center">
+    <img src="./img/workflow.jpg" width="450">
+  </p>
+
   \
-  <img src="./img/workflow.jpg" width="450">
+  \
   This is a project repository for 2023 Columbia Engineering IEOR4525 Machine Learning for FE and OR, Group I.
   By the time this is written down in Apr. 2023, the group implemented 4 different ML/DL models on two different
   feature spaces constructed on the dataset. 
