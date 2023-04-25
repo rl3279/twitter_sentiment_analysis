@@ -3,7 +3,7 @@
 ## Description
 \
   **Project**: Columbia IEOR4525 - Multimodel NLP Twitter Sentiment Analysis
-  **Contributors**: Ding, Xu (Mike); Lin, Ruoyu; Liu, Zhengyi; Yu, Kexuan (Skylar).
+  **Contributors**: Ding, Xu (Mike); Lin, Ruoyu; Yu, Kexuan (Skylar); Zhu, Zhengyi.
 
   <p align="center">
     <img src="./img/workflow.jpg" width="450">
