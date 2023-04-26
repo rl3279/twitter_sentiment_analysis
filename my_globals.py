@@ -1,3 +1,9 @@
+"""
+IEOR4525 Machine Learning For FE and OR - Twitter Sentiment Analysis, Spring 2023
+
+Global variable module. Contains all static variables shared across the repo.
+"""
+
 DATA_DIR = "../project_data"
 DATA_SIZE = 1600000
 MAIN_DATA_NAME = "training.1600000.processed.noemoticon.csv"

@@ -1,7 +1,7 @@
 """
 IEOR4525 Machine Learning For FE and OR - Twitter Sentiment Analysis, Spring 2023
 
-Functional module. Containing all functions used in preprocessing.
+Functional module. Containing all utility functions.
 """
 
 import feature_engineering as fe
