@@ -1,3 +1,9 @@
+"""
+IEOR4525 Machine Learning For FE and OR - Twitter Sentiment Analysis, Spring 2023
+
+Functional module. Containing all functions used in preprocessing.
+"""
+
 import feature_engineering as fe
 import my_globals
 import numpy as np
@@ -95,6 +101,23 @@ def get_feature_space(
         w2v_aggregate: str = "l3",
         random_seed:int = 0
     ):
+    """Executer to get full feature spaces 1 or 2.
+
+    :param N: size of data subset
+    :type N: int
+    :param feature_space: feature space 1 or 2.
+    :type feature_space: int
+    :param max_features: the maximum number of features. 
+        For F1, it's the max_feature parameter for CountVectorizer;
+        For F2, it's the length of embedding vectors.
+    :type max_features: int
+    :param w2v_aggregate: the aggregate function to be applied onto output tensor
+        of the embedding step to transform it to a 2d matrix.
+        Takes value "l3" or "mean".
+    :type w2v_aggregate: str, optional, default "l3"
+    :param random_seed: random seed.
+    :type random_seed: int
+    """
 
     if feature_space not in [1, 2]:
         raise RuntimeError("feature_space = 1 or 2.")
