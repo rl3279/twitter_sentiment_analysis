@@ -12,16 +12,16 @@ STOPWORDS_PATH = DATA_DIR + "/stopwords.txt"
 PUNCS = """"#$%&\'()*+,-./:;[\\]^_{|}~`!?"""
 PIPELINE = {
     "aggresive": [
-        "del_username", "decontract", "del_strange_characters", 
+        "del_username", "decontract", "del_strange_characters",
         "del_stopwords", "lemmatize", "del_awww"
     ],
     "conservative": [
         "del_link", "del_username", "decontract",
         "lemmatize", "del_stopwords", "del_punc",
         "del_digits", "del_awww"
-    ], 
+    ],
     "w2v": [
-        "del_link", "del_username", "decontract", 
+        "del_link", "del_username", "decontract",
         "lemmatize"
     ]
 }
