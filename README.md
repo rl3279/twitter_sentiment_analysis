@@ -4,6 +4,13 @@
 \
   **Project**: Columbia IEOR4525 - Multimodel NLP Twitter Sentiment Analysis \
   **Contributors**: Ding, Xu (Mike); Lin, Ruoyu; Yu, Kexuan (Skylar); Zhu, Zhengyi.
+  Work distribution:
+
+  - ALL members contributed to presentation notebook construction, project planning, preprocessing pipeline implementation and frequent in-team communications.
+  - Mike Ding (xd2249): Word2Vec research and write-up, Word2Vec module implementation, F1-RF model tuning. 
+  - Ruoyu Lin (rl3279): Models framework implementation, F2-RF, F2-NB, F2-LR tuning, LSTM implementation, GitHub documentation and maintenance.
+  - Kexuan Yu (ky2512): F1-LR tuning, summarization of results. 
+  - Zhengyi Zhu (zz2875): preprocessing research, F1-NB tuning, LSTM research 
 
   <p align="center">
     <img src="./img/workflow.jpg" width="450">
